@@ -5,7 +5,17 @@
 (defn generate-validation-message
   "Generate validation message"
   [element
-   validator-message]
+   validator-message
+   & [{bad-input :bad-input
+       custom-error :custom-error
+       pattern-mismatch :pattern-mismatch
+       range-overflow :range-overflow
+       range-underflow :range-underflow
+       step-mismatch :step-mismatch
+       too-long :too-long
+       too-short :too-short
+       type-mismatch :type-mismatch
+       value-missing :value-missing}]]
   (let [validity (.-validity
                    element)
         element-type (.-type
@@ -15,17 +25,28 @@
       (reset!
         validator-message
         (get-label 38))
+      (when bad-input
+        (reset!
+          validator-message
+          bad-input))
      )
     (when (.-customError
             validity)
       (reset!
         validator-message
-        ""))
+        "")
+      (when custom-error
+        (reset!
+          validator-message
+          custom-error))
+     )
     (when (.-patternMismatch
             validity)
       (when-not (contains?
                   #{"text"
-                    "email"}
+                    "textarea"
+                    "email"
+                    "password"}
                   element-type)
         (reset!
           validator-message
@@ -33,13 +54,20 @@
        )
       (when (contains?
               #{"text"
-                "email"}
+                "textarea"
+                "email"
+                "password"}
               element-type)
         (reset!
           validator-message
           (get-label
             57))
-       ))
+       )
+      (when pattern-mismatch
+        (reset!
+          validator-message
+          pattern-mismatch))
+     )
     (when (.-rangeOverflow
             validity)
       (let [max-value (.-max
@@ -61,6 +89,10 @@
               nil
               max-value))
          ))
+      (when range-overflow
+        (reset!
+          validator-message
+          range-overflow))
      )
     (when (.-rangeUnderflow
             validity)
@@ -83,6 +115,10 @@
               nil
               min-value))
          ))
+      (when range-underflow
+        (reset!
+          validator-message
+          range-underflow))
      )
     (when (.-stepMismatch
             validity)
@@ -122,6 +158,10 @@
               [from-value
                to-value]))
          ))
+      (when step-mismatch
+        (reset!
+          validator-message
+          step-mismatch))
      )
     (when (.-tooLong
             validity)
@@ -132,7 +172,12 @@
         (reset!
           validator-message
           (get-label 44))
-       ))
+       )
+      (when too-long
+        (reset!
+          validator-message
+          too-long))
+     )
     (when (.-tooShort
             validity)
       (let [text-length (.-textLength
@@ -141,6 +186,7 @@
                          element)]
         (when-not (contains?
                     #{"text"
+                      "textarea"
                       "email"
                       "password"}
                     element-type)
@@ -150,6 +196,7 @@
          )
         (when (contains?
                 #{"text"
+                  "textarea"
                   "email"
                   "password"}
                 element-type)
@@ -161,6 +208,10 @@
               [min-length
                text-length]))
          ))
+      (when too-short
+        (reset!
+          validator-message
+          too-short))
      )
     (when (.-typeMismatch
             validity)
@@ -177,18 +228,25 @@
         (reset!
           validator-message
           (get-label 52))
-       ))
+       )
+      (when type-mismatch
+        (reset!
+          validator-message
+          type-mismatch))
+     )
     (when (.-valueMissing
             validity)
       (when-not (contains?
                   #{"text"
+                    "textarea"
                     "email"
                     "password"
                     "date"
                     "number"
                     "radio"
                     "select-one"
-                    "select-multiple"}
+                    "select-multiple"
+                    "file"}
                   element-type)
         (reset!
           validator-message
@@ -196,6 +254,7 @@
        )
       (when (contains?
               #{"text"
+                "textarea"
                 "email"
                 "password"
                 "date"}
@@ -225,8 +284,20 @@
         (reset!
           validator-message
           (get-label 51))
-       ))
-   ))
+       )
+      (when (contains?
+              #{"file"}
+              element-type)
+        (reset!
+          validator-message
+          (get-label 65))
+       )
+      (when value-missing
+        (reset!
+          validator-message
+          value-missing))
+     ))
+ )
 
 (defn validate-input
   "Validate input that happened on field"
@@ -281,7 +352,8 @@
         validator-message (atom "")]
     (generate-validation-message
       element
-      validator-message)
+      validator-message
+      evt-p)
     (when-not (.-valid
                 validity)
       (.setCustomValidity
@@ -301,40 +373,45 @@
      ))
  )
 
+(defn custom-validator
+  "Validates field with custom validator"
+  [input-element
+   validator-predicate
+   custom-validator-message
+   validator-message-a]
+  (reset!
+    validator-message-a
+    (if validator-predicate
+      custom-validator-message
+      ""))
+  (.setCustomValidity
+    input-element
+    @validator-message-a))
+
 (defn validate-field
-  "Read validation attributes of particular fields
-  
-  validator-fn
-    (fn [input-elem]
-      (let [input-value (md/get-value-as-number
-                          input-elem)]
-        (if (= input-value
-               888)
-          \"\"
-          \"Number is not 888\"))
-     )"
+  "Read validation attributes of particular fields"
   [input-element
    is-valid
-   & [validator]]
-  (when validator
-    (let [validator-message (validator
-                              input-element)]
-      (.setCustomValidity
-        input-element
-        validator-message))
-   )
-  (when-not validator
+   & [custom-validator-message
+      validator-predicate]]
+  (try
     (let [validity (.-validity
                      input-element)
-          validator-message (atom "")]
-      (generate-validation-message
-        input-element
-        validator-message)
+          validator-message-a (atom "")]
+      (if custom-validator-message
+        (custom-validator
+          input-element
+          validator-predicate
+          custom-validator-message
+          validator-message-a)
+        (generate-validation-message
+          input-element
+          validator-message-a))
       (when-not (.-valid
                   validity)
         (.setCustomValidity
           input-element
-          @validator-message)
+          @validator-message-a)
         (let [span-element (atom nil)]
           (if (= (.-type
                    input-element)
@@ -355,13 +432,19 @@
           (aset
             @span-element
             "innerHTML"
-            @validator-message)
+            @validator-message-a)
           (md/add-class
             (.closest
               @span-element
               "label")
             "error"))
        )
+      (when (.-valid
+              validity)
+        (validate-input
+          nil
+          input-element
+          nil))
       (swap!
         is-valid
         (fn [a-val
@@ -370,6 +453,12 @@
                new-val))
           (.-valid
             validity))
-     ))
- )
+     )
+    (catch js/Error e
+      (.log
+        js/console
+        (.-message
+          e))
+      ))
+  )
 
