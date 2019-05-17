@@ -1,11 +1,11 @@
-(defproject org.clojars.vladimirmarkovic86/validator-lib "0.1.20"
+(defproject org.clojars.vladimirmarkovic86/validator-lib "0.1.21"
   :description "Validator library"
   :url "http://github.com/VladimirMarkovic86/validator-lib"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojurescript "1.10.339"]
-                 [org.clojars.vladimirmarkovic86/js-lib "0.1.10"]
-                 [org.clojars.vladimirmarkovic86/language-lib "0.2.24"]
+                 [org.clojars.vladimirmarkovic86/js-lib "0.1.11"]
+                 [org.clojars.vladimirmarkovic86/language-lib "0.2.25"]
                  ]
 
   :min-lein-version "2.0.0"
