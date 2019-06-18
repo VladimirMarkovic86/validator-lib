@@ -23,12 +23,15 @@
              (instance?
                Atom
                validator-message))
-    (let [validity (.-validity
-                     element)
-          element-type (.-type
-                         element)]
-      (when (.-badInput
-              validity)
+    (let [validity (aget
+                     element
+                     "validity")
+          element-type (aget
+                         element
+                         "type")]
+      (when (aget
+              validity
+              "badInput")
         (reset!
           validator-message
           (get-label 38))
@@ -37,8 +40,9 @@
             validator-message
             bad-input))
        )
-      (when (.-customError
-              validity)
+      (when (aget
+              validity
+              "customError")
         (reset!
           validator-message
           "")
@@ -47,8 +51,9 @@
             validator-message
             custom-error))
        )
-      (when (.-patternMismatch
-              validity)
+      (when (aget
+              validity
+              "patternMismatch")
         (when-not (contains?
                     #{"text"
                       "textarea"
@@ -75,10 +80,12 @@
             validator-message
             pattern-mismatch))
        )
-      (when (.-rangeOverflow
-              validity)
-        (let [max-value (.-max
-                          element)]
+      (when (aget
+              validity
+              "rangeOverflow")
+        (let [max-value (aget
+                          element
+                          "max")]
           (when-not (contains?
                       #{"number"}
                       element-type)
@@ -101,10 +108,12 @@
             validator-message
             range-overflow))
        )
-      (when (.-rangeUnderflow
-              validity)
-        (let [min-value (.-min
-                          element)]
+      (when (aget
+              validity
+              "rangeUnderflow")
+        (let [min-value (aget
+                          element
+                          "min")]
           (when-not (contains?
                       #{"number"}
                       element-type)
@@ -127,8 +136,9 @@
             validator-message
             range-underflow))
        )
-      (when (.-stepMismatch
-              validity)
+      (when (aget
+              validity
+              "stepMismatch")
         (when-not (contains?
                     #{"number"}
                     element-type)
@@ -139,8 +149,9 @@
         (when (contains?
                 #{"number"}
                 element-type)
-          (let [validation-message (.-validationMessage
-                                     element)
+          (let [validation-message (aget
+                                     element
+                                     "validationMessage")
                 validation-message (.substring
                                      validation-message
                                      62
@@ -170,12 +181,15 @@
             validator-message
             step-mismatch))
        )
-      (when (.-tooLong
-              validity)
-        (let [text-length (.-textLength
-                            element)
-              max-length (.-maxLength
-                           element)]
+      (when (aget
+              validity
+              "tooLong")
+        (let [text-length (aget
+                            element
+                            "textLength")
+              max-length (aget
+                           element
+                           "maxLength")]
           (reset!
             validator-message
             (get-label 44))
@@ -185,12 +199,15 @@
             validator-message
             too-long))
        )
-      (when (.-tooShort
-              validity)
-        (let [text-length (.-textLength
-                            element)
-              min-length (.-minLength
-                           element)]
+      (when (aget
+              validity
+              "tooShort")
+        (let [text-length (aget
+                            element
+                            "textLength")
+              min-length (aget
+                           element
+                           "minLength")]
           (when-not (contains?
                       #{"text"
                         "textarea"
@@ -220,8 +237,9 @@
             validator-message
             too-short))
        )
-      (when (.-typeMismatch
-              validity)
+      (when (aget
+              validity
+              "typeMismatch")
         (when-not (contains?
                     #{"email"}
                     element-type)
@@ -241,8 +259,9 @@
             validator-message
             type-mismatch))
        )
-      (when (.-valueMissing
-              validity)
+      (when (aget
+              validity
+              "valueMissing")
         (when-not (contains?
                     #{"text"
                       "textarea"
@@ -314,16 +333,18 @@
   (when (and element
              (md/html?
                element))
-    (let [element-type (.-type
-                         element)
+    (let [element-type (aget
+                         element
+                         "type")
           span-element (atom nil)]
       (if (= element-type
              "radio")
         (let [selection-items (.closest
                                 element
                                 ".selection-items")
-              element-name (.-name
-                             element)
+              element-name (aget
+                             element
+                             "name")
               radio-buttons (md/query-selector-all-on-element
                               ".entity"
                               (str
@@ -336,14 +357,16 @@
               ""))
           (reset!
             span-element
-            (.-nextElementSibling
-              selection-items))
+            (aget
+              selection-items
+              "nextElementSibling"))
          )
         (do
           (reset!
             span-element
-            (.-nextElementSibling
-              element))
+            (aget
+              element
+              "nextElementSibling"))
           (.setCustomValidity
             element
             ""))
@@ -357,17 +380,20 @@
         @span-element
         "innerHTML"
         ""))
-    (let [element-type (.-type
-                         element)
-          validity (.-validity
-                     element)
+    (let [element-type (aget
+                         element
+                         "type")
+          validity (aget
+                     element
+                     "validity")
           validator-message (atom "")]
       (generate-validation-message
         element
         validator-message
         evt-p)
-      (when-not (.-valid
-                  validity)
+      (when-not (aget
+                  validity
+                  "valid")
         (.setCustomValidity
           element
           @validator-message)
@@ -379,13 +405,15 @@
                                     ".selection-items")]
               (reset!
                 span-element
-                (.-nextElementSibling
-                  selection-items))
+                (aget
+                  selection-items
+                  "nextElementSibling"))
              )
             (reset!
               span-element
-              (.-nextElementSibling
-                element))
+              (aget
+                element
+                "nextElementSibling"))
            )
           (aset
             @span-element
@@ -435,8 +463,9 @@
                Atom
                is-valid))
     (try
-      (let [validity (.-validity
-                       input-element)
+      (let [validity (aget
+                       input-element
+                       "validity")
             validator-message-a (atom "")]
         (if custom-validator-message
           (custom-validator
@@ -447,27 +476,31 @@
           (generate-validation-message
             input-element
             validator-message-a))
-        (when-not (.-valid
-                    validity)
+        (when-not (aget
+                    validity
+                    "valid")
           (.setCustomValidity
             input-element
             @validator-message-a)
           (let [span-element (atom nil)]
-            (if (= (.-type
-                     input-element)
+            (if (= (aget
+                     input-element
+                     "type")
                    "radio")
               (let [selection-items (.closest
                                       input-element
                                       ".selection-items")]
                 (reset!
                   span-element
-                  (.-nextElementSibling
-                    selection-items))
+                  (aget
+                    selection-items
+                    "nextElementSibling"))
                )
               (reset!
                 span-element
-                (.-nextElementSibling
-                  input-element))
+                (aget
+                  input-element
+                  "nextElementSibling"))
              )
             (aset
               @span-element
@@ -479,8 +512,9 @@
                 "label")
               "error"))
          )
-        (when (.-valid
-                validity)
+        (when (aget
+                validity
+                "valid")
           (validate-input
             nil
             input-element
@@ -491,14 +525,16 @@
                new-val]
             (and a-val
                  new-val))
-            (.-valid
-              validity))
+            (aget
+              validity
+              "valid"))
        )
       (catch js/Error e
         (.error
           js/console
-          (.-message
-            e))
+          (aget
+            e
+            "message"))
        ))
    ))
 

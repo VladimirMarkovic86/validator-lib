@@ -1,4 +1,4 @@
-(defproject org.clojars.vladimirmarkovic86/validator-lib "0.1.29"
+(defproject org.clojars.vladimirmarkovic86/validator-lib "0.1.30"
   :description "Validator library"
   :url "http://github.com/VladimirMarkovic86/validator-lib"
   :license {:name "Eclipse Public License"
