@@ -1,4 +1,4 @@
-(defproject org.clojars.vladimirmarkovic86/validator-lib "0.1.35"
+(defproject org.clojars.vladimirmarkovic86/validator-lib "0.1.36"
   :description "Validator library"
   :url "http://github.com/VladimirMarkovic86/validator-lib"
   :license {:name "Eclipse Public License"
@@ -11,6 +11,8 @@
   :min-lein-version "2.0.0"
   
   :source-paths ["src/cljs"]
+  
+  :jar-exclusions [#"^public/"]
 
   :plugins [[lein-cljsbuild  "1.1.7"]
             [lein-doo "0.1.11"]
