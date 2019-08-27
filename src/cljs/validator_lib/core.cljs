@@ -34,7 +34,8 @@
               "badInput")
         (reset!
           validator-message
-          (get-label 38))
+          (get-label
+            38))
         (when bad-input
           (reset!
             validator-message
@@ -62,7 +63,8 @@
                     element-type)
           (reset!
             validator-message
-            (get-label 40))
+            (get-label
+              40))
          )
         (when (contains?
                 #{"text"
@@ -91,7 +93,8 @@
                       element-type)
             (reset!
               validator-message
-              (get-label 41))
+              (get-label
+                41))
            )
           (when (contains?
                   #{"number"}
@@ -119,7 +122,8 @@
                       element-type)
             (reset!
               validator-message
-              (get-label 42))
+              (get-label
+                42))
            )
           (when (contains?
                   #{"number"}
@@ -144,7 +148,8 @@
                     element-type)
           (reset!
             validator-message
-            (get-label 43))
+            (get-label
+              43))
          )
         (when (contains?
                 #{"number"}
@@ -192,7 +197,8 @@
                            "maxLength")]
           (reset!
             validator-message
-            (get-label 44))
+            (get-label
+              44))
          )
         (when too-long
           (reset!
@@ -216,7 +222,8 @@
                       element-type)
             (reset!
               validator-message
-              (get-label 45))
+              (get-label
+                45))
            )
           (when (contains?
                   #{"text"
@@ -245,14 +252,16 @@
                     element-type)
           (reset!
             validator-message
-            (get-label 46))
+            (get-label
+              46))
          )
         (when (contains?
                 #{"email"}
                 element-type)
           (reset!
             validator-message
-            (get-label 52))
+            (get-label
+              52))
          )
         (when type-mismatch
           (reset!
@@ -276,7 +285,8 @@
                     element-type)
           (reset!
             validator-message
-            (get-label 47))
+            (get-label
+              47))
          )
         (when (contains?
                 #{"text"
@@ -287,21 +297,24 @@
                 element-type)
           (reset!
             validator-message
-            (get-label 48))
+            (get-label
+              48))
          )
         (when (contains?
                 #{"number"}
                 element-type)
           (reset!
             validator-message
-            (get-label 49))
+            (get-label
+              49))
          )
         (when (contains?
                 #{"radio"}
                 element-type)
           (reset!
             validator-message
-            (get-label 50))
+            (get-label
+              50))
          )
         (when (contains?
                 #{"select-one"
@@ -309,14 +322,16 @@
                 element-type)
           (reset!
             validator-message
-            (get-label 51))
+            (get-label
+              51))
          )
         (when (contains?
                 #{"file"}
                 element-type)
           (reset!
             validator-message
-            (get-label 65))
+            (get-label
+              65))
          )
         (when value-missing
           (reset!
@@ -525,9 +540,9 @@
                new-val]
             (and a-val
                  new-val))
-            (aget
-              validity
-              "valid"))
+          (aget
+            validity
+            "valid"))
        )
       (catch js/Error e
         (.error
